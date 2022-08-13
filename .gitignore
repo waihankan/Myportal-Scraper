@@ -5,7 +5,7 @@ __pycache__/
 
 credentials.py
 cookies.json
-xpaths.pyl
+xpaths.py
 
 # C extensions
 *.so
