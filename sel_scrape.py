@@ -4,11 +4,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
-import json
 
 
 class Scraper(webdriver.Chrome):
-   '''This class is responsible for getting cookies '''
+   ''' This class is responsible for getting cookies '''
    def __init__(self, close_window=False):
       super(Scraper, self).__init__()
       self.maximize_window()
@@ -53,9 +52,12 @@ class Scraper(webdriver.Chrome):
       submit_but = self.find_element(By.XPATH, terms_submit_xpath)
       submit_but.click()
 
+   def click_on_class(self):
+      self.find_element(By.XPATH, sample_class_xpath).click()
+      self.find_element(By.XPATH, course_search_xpath).click()
+      self.find_element(By.XPATH, '/html/body/div[3]/table[2]/tbody/tr[3]/td[3]/form/input[30]').click()
+
 
    # works!!!
-   def print_cookies(self):
-      # print(self.get_cookies())
-      with open("./read.json", "w") as file:
-         json.dump(self.get_cookies(), file)
+   def fetch_cookies(self):
+      return self.get_cookies()
