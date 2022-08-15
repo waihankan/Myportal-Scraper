@@ -9,7 +9,7 @@ with Scraper(close_window=True) as bot:
    bot.registration()
    bot.click_on_class()
    my_cookies = Cookies(cookies = bot.fetch_cookies())
-   my_cookies.save_new_cookies("cookies.json")
+   my_cookies.save_new_cookies("cookies/cookies.json")
 
    
 
