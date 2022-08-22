@@ -27,6 +27,6 @@ for html_file in html_files:
    df = df[df['Date'].str.contains('/\d\d-', regex=True)]
    df.insert(0, 'Terms', html_file[:-5])
    # save the dataframe to a csv file
-   df.to_csv(f"./database/csv_archive/{html_file[:-4]}.csv", index=True)
+   df.to_csv(f"./database/csv_archive/{html_file[:-5]}.csv", index=False)
    print(f"Saved {html_file} to csv file")
    

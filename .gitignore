@@ -3,11 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# personal files
 credentials.py
 cookies.json
 xpaths.py
-database
-
+database/csv_archive/
+database/html_archive/
+*.db
 
 # C extensions
 *.so

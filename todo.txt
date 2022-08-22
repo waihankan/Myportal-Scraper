@@ -1,7 +1,3 @@
-- request terms data
-- archive html files 
-- use pandas to scrape table values
-- pandas clean data + add unique terms
 - change "select" to status
 - sqlite3 stuff for further features
 - fetch_data file will be a class, ask for terms, scrape, and save raw data into html_archive

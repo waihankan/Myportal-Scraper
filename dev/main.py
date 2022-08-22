@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 from sel_scrape import Scraper
 from cookies import Cookies
-from fetch_data import FetchDataRequests
-import time
 
 # def main():
 with Scraper(close_window=True) as bot:

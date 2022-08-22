@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, "/home/selenium/")
+import credentials
 from credentials import username, password, PORTAL_URL
 from xpaths import *
 from selenium import webdriver

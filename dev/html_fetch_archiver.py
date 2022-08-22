@@ -4,7 +4,7 @@ from cookies import Cookies
 from fetch_data import FetchDataRequests
 import time
 
-# def main():
+
 with Scraper(close_window=True) as bot:
    bot.land_page()
    bot.login()
@@ -28,7 +28,6 @@ terms = ["202322", "202312",
          "201142", "201132", "201122", "201112",
 ]
 
-
 for term in terms:
    print(f"Fetching data for term {term}")
    fetcher = FetchDataRequests(term)
@@ -37,9 +36,6 @@ for term in terms:
    fetcher.save_data()
    print("Sleeping for 20 seconds . . . . . \n\n")
    time.sleep(20)
-
-
-   
 
 # if __name__ == '__main__':
 #    main()

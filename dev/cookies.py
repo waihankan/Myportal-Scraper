@@ -24,4 +24,3 @@ class Cookies():
             if cookie['name'] == "SESSID":
                cookie['value'] = new_sess_id
       self.save_cookies(filename)
-
