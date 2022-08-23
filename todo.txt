@@ -1,3 +1,0 @@
-sql insert into normalized database
-  - panada professor row regrex
-  - 

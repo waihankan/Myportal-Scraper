@@ -2,9 +2,11 @@ import json
 
 
 class Cookies():
-   ''' Cookies that will handle handshake with the server 
-       and save the new cookies to the file **kwargs handles the cookies set
-       or get type '''
+   """
+      Cookies that will handle handshake with the server 
+      and save the new cookies to the file **kwargs handles the cookies set
+      or get type
+   """
    def __init__(self, **kwargs):
       self.cookies = kwargs.get('cookies', [])
 
