@@ -7,8 +7,8 @@ __pycache__/
 credentials.py
 cookies.json
 xpaths.py
-database/csv_archive/
-database/html_archive/
+database/csv_archive/*.csv
+database/html_archive/*.html
 *.db
 
 # C extensions
