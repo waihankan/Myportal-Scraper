@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, "/home/selenium/")
-import credentials
 from credentials import username, password, PORTAL_URL
 from xpaths import *
 from selenium import webdriver
@@ -23,8 +20,6 @@ class Scraper(webdriver.Chrome):
       self.get(PORTAL_URL)
 
    def _login(self):
-      # print(f"username = {username}")
-      # print(f"password = {password}")
       user_input = self.find_element(By.XPATH, user_xpath)
       password_input = self.find_element(By.XPATH, password_xpath)
       user_input.send_keys(username)
