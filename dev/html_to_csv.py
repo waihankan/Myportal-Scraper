@@ -23,10 +23,12 @@ for html_file in html_files:
                "Sec", "Cmp", "Cred", "Title", "Days", "Time",
                "Act", "Rem", "Wlrem", "Instructor", "Date", 
                "Location"] 
+   # clean up instructor names and remove the (P) from the end
+   df["Instructor"] = df["Instructor"].str.replace(r' \(P\)', '', regex=True)
    # filter out the rows that are not schedules of classes
    df = df[df['Date'].str.contains('/\d\d-', regex=True)]
    df.insert(0, 'Terms', html_file[:-5])
    # save the dataframe to a csv file
-   df.to_csv(f"./database/csv_archive/{html_file[:-5]}.csv", index=False)
+   df.to_csv(f"./database/csv_archive/{html_file[:-5]}.csv", index=False, encoding='utf-8')
    print(f"Saved {html_file} to csv file")
    
