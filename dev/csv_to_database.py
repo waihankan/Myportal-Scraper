@@ -9,6 +9,7 @@ from os import listdir
 from os.path import isfile, join
 import pandas as pd
 import sqlite3 as sql
+import regex as re
 
 # Change filepaths to here
 DATABASE_FILEPATH = "./database/test2.db"
@@ -36,10 +37,22 @@ def insert_schedule(term, crn, status, subj, crse, sec, _cmp, coreq, act, rem, w
    )
    conn.commit()
 
+
+def instructor_email_generator(full_name_with_middle_initial):
+      full_name = re.sub(r"\s\w*.\s", " ", full_name_with_middle_initial)
+      first_name = full_name.split()[0]
+      last_name = full_name.split()[1]
+      first_email_name = re.sub(r"-", "", first_name).lower()
+      last_email_name = re.sub(r"-", "", last_name).lower()
+      return f"{last_email_name}{first_email_name}@deanza.edu"
+
+
 # Insert into deanza_instructors table if not exists
-def insert_instructor(instructor):
-   cur.execute("INSERT OR IGNORE INTO deanza_instructors (Instructor_Name) VALUES (?)", (instructor,))
-   conn.commit()
+def insert_instructor(instructor, dept):
+   if (instructor != "TBA"):
+      email = instructor_email_generator(instructor)
+      cur.execute("INSERT OR IGNORE INTO deanza_instructors (Instructor_Name, Department, Email) VALUES (?, ?, ?)", (instructor, dept, email))
+      conn.commit()
 
 
 # get a list of all csv files in the csv_archive folder
@@ -51,8 +64,8 @@ csv_files.sort()
 for csv_file in csv_files:
    df = pd.read_csv(f"{CSV_FILEPATH}{csv_file}", converters={'Crn': lambda x: str(x)})
    for row in df.itertuples():
-      insert_course(getattr(row, "Subj"), getattr(row, "Crse"), getattr(row, "Title"), getattr(row, "Cred"))
-      insert_schedule(getattr(row, "Terms"), getattr(row, "Crn"), getattr(row, "Status"), getattr(row, "Subj"), getattr(row, "Crse"), getattr(row, "Sec"), getattr(row, "Cmp"), getattr(row, "Coreq"), getattr(row, "Act"), getattr(row, "Rem"), getattr(row, "Wlrem"), getattr(row, "Instructor"), getattr(row, "Date"), getattr(row, "Days"), getattr(row, "Time"), getattr(row, "Location"))
-      insert_instructor(getattr(row, "Instructor"))
+      # insert_course(getattr(row, "Subj"), getattr(row, "Crse"), getattr(row, "Title"), getattr(row, "Cred"))
+      # insert_schedule(getattr(row, "Terms"), getattr(row, "Crn"), getattr(row, "Status"), getattr(row, "Subj"), getattr(row, "Crse"), getattr(row, "Sec"), getattr(row, "Cmp"), getattr(row, "Coreq"), getattr(row, "Act"), getattr(row, "Rem"), getattr(row, "Wlrem"), getattr(row, "Instructor"), getattr(row, "Date"), getattr(row, "Days"), getattr(row, "Time"), getattr(row, "Location"))
+      insert_instructor(getattr(row, "Instructor"), getattr(row, "Subj"))
    print(f"Inserted {csv_file} into database")
 conn.close()
