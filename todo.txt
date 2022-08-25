@@ -1,2 +1,3 @@
-waitlist finder
-class_schedule finder
+- scrape transfer_camp
+- find  a way to put into database: solve, instructor name inconsistency.
+

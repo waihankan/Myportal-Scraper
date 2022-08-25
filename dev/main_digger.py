@@ -1,4 +1,3 @@
-import re
 from digger import Digger
 
 DATABASE_FILEPATH = "./database/test2.db"
@@ -18,8 +17,6 @@ def test():
    subj = input("Enter subject: ")
    crse = input("Enter course number: ")
    results = digger.schedule_finder(term, subj, crse)
-   # crn = input("Enter CRN: ")
-   # results = digger.search_by_crn(term, crn)
    for result in results:
       print(result)
 
