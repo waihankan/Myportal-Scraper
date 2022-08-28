@@ -46,12 +46,19 @@ def instructor_email_generator(full_name_with_middle_initial):
       last_email_name = re.sub(r"-", "", last_name).lower()
       return f"{last_email_name}{first_email_name}@deanza.edu"
 
+def get_legal_name(full_name_with_middle_initial):
+   full_name = re.sub(r"\s\w*.\s", " ", full_name_with_middle_initial)
+   first_name = full_name.split()[0]
+   last_name = full_name.split()[1]
+   return f"{last_name}, {first_name}"
+
 
 # Insert into deanza_instructors table if not exists
 def insert_instructor(instructor, dept):
    if (instructor != "TBA"):
       email = instructor_email_generator(instructor)
-      cur.execute("INSERT OR IGNORE INTO deanza_instructors (Instructor_Name, Department, Email) VALUES (?, ?, ?)", (instructor, dept, email))
+      name = get_legal_name(instructor)
+      cur.execute("INSERT OR IGNORE INTO deanza_instructors (Instructor_Name, Department, Email, Name) VALUES (?, ?, ?, ?)", (instructor, dept, email, name))
       conn.commit()
 
 
@@ -64,8 +71,8 @@ csv_files.sort()
 for csv_file in csv_files:
    df = pd.read_csv(f"{CSV_FILEPATH}{csv_file}", converters={'Crn': lambda x: str(x)})
    for row in df.itertuples():
-      insert_course(getattr(row, "Subj"), getattr(row, "Crse"), getattr(row, "Title"), getattr(row, "Cred"))
-      insert_schedule(getattr(row, "Terms"), getattr(row, "Crn"), getattr(row, "Status"), getattr(row, "Subj"), getattr(row, "Crse"), getattr(row, "Sec"), getattr(row, "Cmp"), getattr(row, "Coreq"), getattr(row, "Act"), getattr(row, "Rem"), getattr(row, "Wlrem"), getattr(row, "Instructor"), getattr(row, "Date"), getattr(row, "Days"), getattr(row, "Time"), getattr(row, "Location"))
+      # insert_course(getattr(row, "Subj"), getattr(row, "Crse"), getattr(row, "Title"), getattr(row, "Cred"))
+      # insert_schedule(getattr(row, "Terms"), getattr(row, "Crn"), getattr(row, "Status"), getattr(row, "Subj"), getattr(row, "Crse"), getattr(row, "Sec"), getattr(row, "Cmp"), getattr(row, "Coreq"), getattr(row, "Act"), getattr(row, "Rem"), getattr(row, "Wlrem"), getattr(row, "Instructor"), getattr(row, "Date"), getattr(row, "Days"), getattr(row, "Time"), getattr(row, "Location"))
       insert_instructor(getattr(row, "Instructor"), getattr(row, "Subj"))
    print(f"Inserted {csv_file} into database")
 conn.close()

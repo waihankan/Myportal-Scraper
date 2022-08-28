@@ -61,10 +61,27 @@ def course_parser(crse):
       elif(len(crse) == 4):
          return f"D{crse}"
 
+def test_grades():
+   digger = Digger(DATABASE_FILEPATH)
+   instructor = input("Enter instructor name: ")
+   results = digger.prof_grade_info(instructor, "EWRT")
+   for result in results:
+      print(result)
+
+def test_whois():
+   digger = Digger(DATABASE_FILEPATH)
+   instructor = input("Enter instructor name: ")
+   results = digger.who_is(instructor)
+   for result in results:
+      print(result)
+
 
 
 
 
 if __name__ == "__main__":
    # print(course_parser("22c", "22b"))
-   print(Digger(DATABASE_FILEPATH).waitlist_viewer("", "EWRT", "D002."))
+   # print(Digger(DATABASE_FILEPATH).waitlist_viewer("", "EWRT", "D002."))
+   # test_whois()
+   test_grades()
+   
