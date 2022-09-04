@@ -1,0 +1,10 @@
+catkin==0.8.10
+gencpp==0.6.5
+geneus==3.0.0
+genlisp==0.4.18
+genmsg==0.5.16
+gennodejs==2.0.2
+genpy==0.6.15
+rosgraph==1.15.14
+roslib==1.15.8
+rospy==1.15.14

@@ -151,8 +151,8 @@ class Digger:
             return f"D{crse}"
             
 
-   @dispatch(str, lines=int)
-   def prof_grade_info(self, instructor, lines=5):
+   @dispatch(str)
+   def prof_grade_info(self, instructor):
       """
       This function will return raw grade distribution data for a specific instructor
       
@@ -161,55 +161,48 @@ class Digger:
       lines (int): number of lines to return, default is 5
       
       """
+      LINES = 10
       self.cur.execute('''
          SELECT Year, Semester, Instructor, Subj, Crse, A, B, C, D, F, W FROM deanza_transfer_camp
          WHERE Instructor LIKE ? COLLATE NOCASE
          ORDER BY Year DESC
          LIMIT ?;
          ''', 
-      (f"%{instructor.split()[0]}%", lines))
+      (f"%{instructor.split()[0]}%", LINES))
       return self.cur.fetchall()
 
 
-   @dispatch(str, str, lines=int)
-   def prof_grade_info(self, instructor, subj, lines=5):
+   @dispatch(str, str)
+   def prof_grade_info(self, subj, crse):
+      LINES = 10
+      self.cur.execute('''
+         SELECT Year, Semester, Instructor, Subj, Crse, A, B, C, D, F, W FROM deanza_transfer_camp
+         WHERE Subj = ? AND Crse = ?
+         ORDER BY A DESC, B DESC, C DESC, D DESC, F ASC, W ASC
+         LIMIT ?;
+         ''',
+      (subj.upper(), crse.upper(), LINES))
+      return self.cur.fetchall()
+
+
+   @dispatch(str, str, str)
+   def prof_grade_info(self, instructor, subj, crse):
       """
       This function will return raw grade distribution data for a specific instructor
       
       Parameters:
       instructor (str): instructor name, case insensitive
-      subj (str): subject, case insensitive
       lines (int): number of lines to return, default is 5
       
       """
-      self.cur.execute('''
-         SELECT Year, Semester, Instructor, Subj, Crse, A, B, C, D, F, W FROM deanza_transfer_camp
-         WHERE Instructor LIKE ? COLLATE NOCASE AND Subj = ?
-         ORDER BY Year DESC
-         LIMIT ?;
-         ''', 
-      (f"%{instructor.split()[0]}%", subj.upper(), lines))
-      return self.cur.fetchall()
-
-   @dispatch(str, str, str, lines=int)
-   def prof_grade_info(self, instructor, subj, crse, lines=5):
-      """
-      This function will return raw grade distribution data for a specific instructor and course
-      
-      Parameters:
-      instructor (str): instructor name, case insensitive
-      subj (str): subject, case insensitive
-      crse (str): course number, case insensitive
-      lines (int): number of lines to return, default is 5
-      
-      """
+      LINES = 10
       self.cur.execute('''
          SELECT Year, Semester, Instructor, Subj, Crse, A, B, C, D, F, W FROM deanza_transfer_camp
          WHERE Instructor LIKE ? COLLATE NOCASE AND Subj = ? AND Crse = ?
          ORDER BY Year DESC
          LIMIT ?;
          ''', 
-      (f"%{instructor.split()[0]}%", subj.upper(), crse.upper(), lines))
+      (f"%{instructor.split()[0]}%", subj.upper(), crse.upper(), LINES))
       return self.cur.fetchall()
 
 
@@ -221,11 +214,17 @@ class Digger:
       instructor (str): instructor name, case insensitive
       
       """
-      self.cur.execute('''
-         SELECT Instructor_Name, Department, Email FROM deanza_instructors
-         WHERE Name LIKE ? COLLATE NOCASE
-         LIMIT 1;
-         ''', 
-      (f"%{instructor.split()[0]}%",))
+      if len(instructor.split()) == 1:
+         self.cur.execute('''
+            SELECT Instructor_Name, Department, Email FROM deanza_instructors
+            WHERE Instructor_Name LIKE ? COLLATE NOCASE;
+            ''', 
+         (f"%{instructor.split()[0]}%",))
+      else:
+         self.cur.execute('''
+            SELECT Instructor_Name, Department, Email FROM deanza_instructors
+            WHERE Instructor_Name LIKE ? COLLATE NOCASE;
+            ''', 
+         (f"%{instructor.split()[0]}%{instructor.split()[1]}%",))
       return self.cur.fetchall()
       

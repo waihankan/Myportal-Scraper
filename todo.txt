@@ -1,3 +1,4 @@
-- scrape transfer_camp
-- find  a way to put into database: solve, instructor name inconsistency.
+- add phone number
+- fixed data inconsistency transfer_camp
+- fix commands, and add useful commands
 

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from digger import Digger
 
 DATABASE_FILEPATH = "./database/test2.db"
@@ -32,14 +34,14 @@ def test_course_parser():
    result = digger.course_parser(course)
    print(result)
 
-def test_course_parser(original_function):
-   def wrapper(*args, **kwargs):
-      print("Input validation test")
-      print("Input: ", args[0], args[1])
-      return original_function(*args, **kwargs)
-   return wrapper
+# def test_course_parser(original_function):
+#    def wrapper(*args, **kwargs):
+#       print("Input validation test")
+#       print("Input: ", args[0], args[1])
+#       return original_function(*args, **kwargs)
+#    return wrapper
 
-@test_course_parser
+# @test_course_parser
 def course_parser(crse):
    if(len(crse) > 5):
       return "Invalid course number"
@@ -83,5 +85,6 @@ if __name__ == "__main__":
    # print(course_parser("22c", "22b"))
    # print(Digger(DATABASE_FILEPATH).waitlist_viewer("", "EWRT", "D002."))
    # test_whois()
-   test_grades()
+   # test_grades()
+   print(course_parser("D008"))
    
