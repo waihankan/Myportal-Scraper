@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
    Script to parse the data from html file into csv using pandas library.
 """
