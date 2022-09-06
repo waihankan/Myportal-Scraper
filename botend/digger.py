@@ -17,7 +17,7 @@ class Digger:
       self.cur = self.conn.cursor()
 
 
-   def waitlist_viewer(self, instructor, subj, crse, lines=5):
+   def waitlist_viewer(self, instructor, subj, crse):
       """ 
       This function will return raw waitlist data for a specific instructor, subject, and course
 
@@ -28,17 +28,17 @@ class Digger:
       lines (int): number of lines to return, default is 5
 
       """
+      LINES = 10
       self.cur.execute('''
          SELECT Terms, Subj, Crse, Act, Rem, Wlrem, Instructor, Location FROM deanza_course_schedule
          WHERE Instructor LIKE ? COLLATE NOCASE AND Subj = ? AND Crse = ?
          ORDER BY Terms DESC
          LIMIT ?;
          ''', 
-      (f"%{instructor.split()[0]}%", subj.upper(), crse.upper(), lines))
+      (f"%{instructor.split()[0]}%", subj.upper(), crse.upper(), LINES))
       return self.cur.fetchall()
 
-   @dispatch(str, str)
-   def schedule_finder(self, term, subj):
+   def search_by_term_subj(self, term, subj):
       """ 
       This function will return raw schedule data for a specific term and subject
 
@@ -48,20 +48,18 @@ class Digger:
 
       """
       self.cur.execute('''
-         SELECT Terms, Crn, Coreq, deanza_course_schedule.Subj, deanza_course_schedule.Crse, deanza_course_details.Title, Sec, Cmp, Act, Rem, Wlrem,
-         Instructor, Date, Days, Time, Location
+         SELECT Crn, deanza_course_schedule.Subj, deanza_course_schedule.Crse, Rem, Wlrem,
+         Instructor, Days, Time
          FROM deanza_course_schedule
          LEFT JOIN deanza_course_details
          ON deanza_course_schedule.Subj = deanza_course_details.Subj AND deanza_course_schedule.Crse = deanza_course_details.Crse
          WHERE Terms = ? AND deanza_course_schedule.Subj = ?
-         ORDER BY deanza_course_details.Crse DESC, Act DESC, Rem ASC, Wlrem ASC;
          ''', 
       (term, subj.upper()))
       return self.cur.fetchall()
 
 
-   @dispatch(str, str, str)
-   def schedule_finder(self, term, subj, crse):
+   def search_by_term_subj_crse(self, term, subj, crse):
       """ 
       This function will return raw schedule data for a specific term, subject, and course
 
@@ -72,15 +70,15 @@ class Digger:
 
       """
       self.cur.execute('''
-         SELECT Terms, Crn, Coreq, deanza_course_schedule.Subj, deanza_course_schedule.Crse, deanza_course_details.Title, Sec, Cmp, Act, Rem, Wlrem,
-         Instructor, Date, Days, Time,
-         Location FROM deanza_course_schedule
+         SELECT Crn, deanza_course_schedule.Subj, deanza_course_schedule.Crse, Rem, Wlrem,
+         Instructor, Days, Time
+         FROM deanza_course_schedule
          LEFT JOIN deanza_course_details
          ON deanza_course_schedule.Subj = deanza_course_details.Subj AND deanza_course_schedule.Crse = deanza_course_details.Crse
          WHERE Terms = ? AND deanza_course_schedule.Subj = ? AND deanza_course_schedule.Crse = ?
-         ORDER BY Act DESC, Rem ASC, Wlrem ASC;
+         ORDER BY Rem ASC, Wlrem ASC;
          ''', 
-      (term, subj.upper(), crse.upper()))
+         (term, subj.upper(), crse.upper()))
       return self.cur.fetchall()
 
    def search_by_crn(self, term, crn):
@@ -93,9 +91,9 @@ class Digger:
 
       """
       self.cur.execute('''
-         SELECT Terms, Crn, Coreq, deanza_course_schedule.Subj, deanza_course_schedule.Crse, deanza_course_details.Title, Sec, Cmp, Act, Rem, Wlrem,
-         Instructor, Date, Days, Time,
-         Location FROM deanza_course_schedule
+         SELECT Crn, deanza_course_schedule.Subj, deanza_course_schedule.Crse, Rem, Wlrem,
+         Instructor, Days, Time
+         FROM deanza_course_schedule
          LEFT JOIN deanza_course_details
          ON deanza_course_schedule.Subj = deanza_course_details.Subj AND deanza_course_schedule.Crse = deanza_course_details.Crse
          WHERE Terms = ? AND Crn = ?
@@ -178,7 +176,7 @@ class Digger:
       self.cur.execute('''
          SELECT Year, Semester, Instructor, Subj, Crse, A, B, C, D, F, W FROM deanza_transfer_camp
          WHERE Subj = ? AND Crse = ?
-         ORDER BY A DESC, B DESC, C DESC, D DESC, F ASC, W ASC
+         ORDER BY A DESC, B DESC, C DESC, D DESC, F ASC, W DESC
          LIMIT ?;
          ''',
       (subj.upper(), crse.upper(), LINES))
@@ -216,13 +214,13 @@ class Digger:
       """
       if len(instructor.split()) == 1:
          self.cur.execute('''
-            SELECT Instructor_Name, Department, Email FROM deanza_instructors
+            SELECT Instructor_Name, Department, Email, Phone_Number FROM deanza_instructors
             WHERE Instructor_Name LIKE ? COLLATE NOCASE;
             ''', 
          (f"%{instructor.split()[0]}%",))
       else:
          self.cur.execute('''
-            SELECT Instructor_Name, Department, Email FROM deanza_instructors
+            SELECT Instructor_Name, Department, Email, Phone_Number FROM deanza_instructors
             WHERE Instructor_Name LIKE ? COLLATE NOCASE;
             ''', 
          (f"%{instructor.split()[0]}%{instructor.split()[1]}%",))
