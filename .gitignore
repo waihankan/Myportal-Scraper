@@ -12,6 +12,9 @@ database/html_archive/*.html
 database/transfer_html_archive/*.html
 database/transfer_csv_archive/*.csv
 database/contacts_html_archive/*.html
+.replit
+replit.nix
+
 
 *.db
 
