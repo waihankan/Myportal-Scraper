@@ -83,7 +83,7 @@ async def on_message(message):
       await message.channel.send(embed=embed)
 
    elif message.content.lower().startswith("!whois"):
-      """ !whois professor_name"""
+      """ !whois professor_name """
       args = message.content.lower().split("--")
       prof = re.sub(r'!whois ', '', args[0])
       prof = re.sub(" +", ' ', prof)

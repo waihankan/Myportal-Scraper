@@ -237,11 +237,13 @@ class Digger:
             WHERE Instructor_Name LIKE ? COLLATE NOCASE;
             ''', 
          (f"%{instructor.split()[0]}%",))
-      else:
+      elif len(instructor.split()) >= 2:
          self.cur.execute('''
             SELECT Instructor_Name, Department, Email, Phone_Number FROM deanza_instructors
             WHERE Instructor_Name LIKE ? COLLATE NOCASE;
             ''', 
          (f"%{instructor.split()[0]}%{instructor.split()[1]}%",))
+      else:
+         return []
       return self.cur.fetchall()
       
