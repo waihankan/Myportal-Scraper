@@ -9,7 +9,7 @@ CURRENT_TERM = "202322"  # <---- edit the term here
 
 HTML_FILEPATH = "./database/html_archive/"
 CSV_FILEPATH = "./database/csv_archive/"
-DATABASE_FILEPATH = "./database/test2.db"
+DATABASE_FILEPATH = "./database/main_database.db"
 SQL_COL_LIST = ["Status", "Crn", "Coreq", "Subj", "Crse",
                "Sec", "Cmp", "Cred", "Title", "Days", "Time",
                "Act", "Rem", "Wlrem", "Instructor", "Date", 

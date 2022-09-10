@@ -5,7 +5,7 @@ import sqlite3 as sql
 
 # Global variables
 HTML_FILEPATH = "./database/contacts_html_archive/contacts.html"
-DATABASE_FILEPATH = "./database/test2.db"
+DATABASE_FILEPATH = "./database/main_database.db"
 
 # Create the database connection
 conn = sql.connect(DATABASE_FILEPATH)

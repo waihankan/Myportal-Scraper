@@ -11,7 +11,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 client = discord.Client(intents=intents)
-DATABASE_FILEPATH = "./database/test2.db"
+DATABASE_FILEPATH = "./database/main_database.db"
 bot = Digger(DATABASE_FILEPATH)
 
 

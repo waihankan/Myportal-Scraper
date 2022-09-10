@@ -4,7 +4,7 @@ import pandas as pd
 import sqlite3 as sql
 
 
-DATABASE_FILEPATH = "./database/test2.db"
+DATABASE_FILEPATH = "./database/main_database.db"
 CSV_FILEPATH = "./database/transfer_csv_archive/"
 
 conn = sql.connect(DATABASE_FILEPATH)

@@ -14,7 +14,7 @@ import pandas as pd
 import regex as re
 
 # Change filepaths to here
-DATABASE_FILEPATH = "./database/test2.db"
+DATABASE_FILEPATH = "./database/main_database.db"
 CSV_FILEPATH = "./database/csv_archive/"
 
 conn = sql.connect(DATABASE_FILEPATH)
