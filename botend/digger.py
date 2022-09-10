@@ -17,7 +17,7 @@ class Digger:
       self.cur = self.conn.cursor()
 
 
-   def waitlist_viewer(self, instructor, subj, crse):
+   def waitlist_viewer_crse(self, instructor, subj, crse):
       """ 
       This function will return raw waitlist data for a specific instructor, subject, and course
 
@@ -25,7 +25,6 @@ class Digger:
       instructor (str): instructor name, accept partial name, case insensitive, e.g. "John" will return all instructors with "John" in their name
       subj (str): subject, case insensitive
       crse (str): course number, case insensitive
-      lines (int): number of lines to return, default is 5
 
       """
       LINES = 10
@@ -37,6 +36,26 @@ class Digger:
          ''', 
       (f"%{instructor.split()[0]}%", subj.upper(), crse.upper(), LINES))
       return self.cur.fetchall()
+
+   def waitlist_viewer_prof(self, instructor, subj):
+      """ 
+      This function will return raw waitlist data for a specific instructor, subject, and course
+
+      Parameters:
+      instructor (str): instructor name, accept partial name, case insensitive, e.g. "John" will return all instructors with "John" in their name
+      subj (str): subject, case insensitive
+
+      """
+      LINES = 10
+      self.cur.execute('''
+         SELECT Terms, Subj, Crse, Act, Rem, Wlrem, Instructor, Location FROM deanza_course_schedule
+         WHERE Instructor LIKE ? COLLATE NOCASE AND Subj = ?
+         ORDER BY Terms DESC
+         LIMIT ?;
+         ''', 
+      (f"%{instructor.split()[0]}%", subj.upper(), LINES))
+      return self.cur.fetchall()
+
 
    def search_by_term_subj(self, term, subj):
       """ 

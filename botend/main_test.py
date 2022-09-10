@@ -303,30 +303,19 @@ async def on_message(message):
          await message.channel.send(embed = embed)
 
    elif message.content.lower().startswith("!waitlist"):
-      """ !waitlist --professor --subject --course_number """
       args = message.content.lower().split("--")
-      if len(args) == 4:
+      response = []
+      if len(args) == 3:
+         """ !waitlist --professor --subject """
+         prof = args[1].strip()
+         subj = args[2].strip()
+         response = bot.waitlist_viewer_prof(prof, subj)
+      elif len(args) == 4:
+         """ !waitlist --professor --subject --course_number """
          prof = args[1].strip()
          subj = args[2].strip()
          crse = course_parser(args[3].strip())
-         response = bot.waitlist_viewer(instructor=prof, subj=subj, crse=crse)
-         if response:
-            table = PrettyTable()
-            table.field_names = ["Terms", "Subject", "Course", "Act", "Rem", "WLRem", "Instructor", "Location"]
-            for data in response:
-               table.add_row(data)
-            await message.channel.send(f"```{table}\n💡 Negative numbers under 'Rem' represents the number of accepted Waitlisted students.```")
-
-         else:
-            embed = discord.Embed(
-               title = f"No Results Found",
-               description="Please use `!waitlist --professor --subject --course_number`",
-               color=discord.Color.blue()
-            )
-            embed.add_field(name="Examples:", value="➡ **!waitlist --Delia --CIS --22A**", inline=True)
-            embed.set_footer(text="Thank you for using me 😀")
-            await message.channel.send(embed = embed)
-
+         response = bot.waitlist_viewer_crse(instructor=prof, subj=subj, crse=crse)
       else:
          embed = discord.Embed(
             title = f"Invalid Command",
@@ -336,4 +325,22 @@ async def on_message(message):
          embed.add_field(name="Examples:", value="➡ **!waitlist --Oldham --CIS --22B**", inline=True)
          embed.set_footer(text="Thank you for using me 😀")
          await message.channel.send(embed = embed)
+
+      if response:
+         table = PrettyTable()
+         table.field_names = ["Terms", "Subject", "Course", "Act", "Rem", "WLRem", "Instructor", "Location"]
+         for data in response:
+            table.add_row(data)
+         await message.channel.send(f"```{table}\n💡 Negative numbers under 'Rem' represents the number of accepted Waitlisted students.```")
+
+      else:
+         embed = discord.Embed(
+            title = f"No Results Found",
+            description="Please use `!waitlist --professor --subject --course_number`",
+            color=discord.Color.blue()
+         )
+         embed.add_field(name="Examples:", value="➡ **!waitlist --Delia --CIS --22A**", inline=True)
+         embed.set_footer(text="Thank you for using me 😀")
+         await message.channel.send(embed = embed)
+
 client.run(DISCORD_TOKEN)
