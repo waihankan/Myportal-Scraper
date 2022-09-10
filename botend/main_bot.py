@@ -76,7 +76,7 @@ async def on_message(message):
       embed.add_field(name="**!help**", value="Display This Help Message", inline=False)
       embed.add_field(name="**Professor Information**", value="`!whois prof_name`", inline=False)
       embed.add_field(name="**Easiest Professor (According to the grade distribution)**", value="`!easy --CIS --22C`", inline=False)
-      embed.add_field(name="**Waitlist Information**", value="`!waitlist --prof --MATH --1A`", inline=False)
+      embed.add_field(name="**Waitlist Information**", value="`!waitlist --prof --MATH --1A`\n'!waitlist --prof --ESL`", inline=False)
       embed.add_field(name="**Grade Distribution**", value="`!grades --prof_name --ACCT`\n`!grades --prof_name --PHIL --8`", inline=False)
       embed.add_field(name="**Check Class Schedule**", value="`!find --winter22 --CIS`\n`!find --spring22 --ACCT --1A`\n`!find --fall22 --{CRN}`", inline=False)
       embed.set_footer(text="💭 Please contact if you want to volunteer to help me improve!")
@@ -305,6 +305,7 @@ async def on_message(message):
    elif message.content.lower().startswith("!waitlist"):
       args = message.content.lower().split("--")
       response = []
+      invalid = False
       if len(args) == 3:
          """ !waitlist --professor --subject """
          prof = args[1].strip()
@@ -317,6 +318,7 @@ async def on_message(message):
          crse = course_parser(args[3].strip())
          response = bot.waitlist_viewer_crse(instructor=prof, subj=subj, crse=crse)
       else:
+         invalid = True
          embed = discord.Embed(
             title = f"Invalid Command",
             description="Please use `!waitlist --professor --subject --course_number`",
@@ -334,13 +336,14 @@ async def on_message(message):
          await message.channel.send(f"```{table}\n💡 Negative numbers under 'Rem' represents the number of accepted Waitlisted students.```")
 
       else:
-         embed = discord.Embed(
-            title = f"No Results Found",
-            description="Please use `!waitlist --professor --subject --course_number`",
-            color=discord.Color.blue()
-         )
-         embed.add_field(name="Examples:", value="➡ **!waitlist --Delia --CIS --22A**", inline=True)
-         embed.set_footer(text="Thank you for using me 😀")
-         await message.channel.send(embed = embed)
+         if not invalid:
+            embed = discord.Embed(
+               title = f"No Results Found",
+               description="Please use `!waitlist --professor --subject --course_number`",
+               color=discord.Color.blue()
+            )
+            embed.add_field(name="Examples:", value="➡ **!waitlist --Delia --CIS --22A**", inline=True)
+            embed.set_footer(text="Thank you for using me 😀")
+            await message.channel.send(embed = embed)
 
 client.run(DISCORD_TOKEN)
