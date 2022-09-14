@@ -1,1 +1,5 @@
-scrape foothill
+- scrape foothill
+- make a documentation + marketing
+- volunteer forms
+- google cloud server
+
