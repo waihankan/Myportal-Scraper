@@ -65,6 +65,7 @@ async def on_message(message):
       return
 
    elif message.content.lower().startswith("!help"):
+      bot.bot_usage("Help")
       embed = discord.Embed(
          title="I am -- a bot for De Anza College course information",
          url = "https://i.imgur.com/wmDr0DU.png",
@@ -73,10 +74,10 @@ async def on_message(message):
       )
       embed.set_author(name="Just Wanna Graduate", url="https://i.imgur.com/wmDr0DU.png", icon_url="https://i.imgur.com/wmDr0DU.png")
       embed.set_thumbnail(url="https://i.imgur.com/wmDr0DU.png")
-      embed.add_field(name="**!help**", value="Display This Help Message", inline=False)
+      embed.add_field(name="**!help**", value="`Display This Help Message`", inline=False)
       embed.add_field(name="**Professor Information**", value="`!whois prof_name`", inline=False)
       embed.add_field(name="**Easiest Professor (According to the grade distribution)**", value="`!easy --CIS --22C`", inline=False)
-      embed.add_field(name="**Waitlist Information**", value="`!waitlist --prof --MATH --1A`\n'!waitlist --prof --ESL`", inline=False)
+      embed.add_field(name="**Waitlist Information**", value="`!waitlist --prof --MATH --1A`\n`!waitlist --prof --ESL`", inline=False)
       embed.add_field(name="**Grade Distribution**", value="`!grades --prof_name --ACCT`\n`!grades --prof_name --PHIL --8`", inline=False)
       embed.add_field(name="**Check Class Schedule**", value="`!find --winter22 --CIS`\n`!find --spring22 --ACCT --1A`\n`!find --fall22 --{CRN}`", inline=False)
       embed.set_footer(text="💭 Please contact if you want to volunteer to help me improve!")
@@ -84,6 +85,7 @@ async def on_message(message):
 
    elif message.content.lower().startswith("!whois"):
       """ !whois professor_name """
+      bot.bot_usage("Whois")
       args = message.content.lower().split("--")
       prof = re.sub(r'!whois ', '', args[0])
       prof = re.sub(" +", ' ', prof)
@@ -113,6 +115,7 @@ async def on_message(message):
 
    elif message.content.lower().startswith("!grades"):
       """ !grades --prof_first_and_last_name """
+      bot.bot_usage("Grades")
       args = message.content.lower().split("--")
       if len(args) == 2:
          """ !grades --professor"""
@@ -169,6 +172,7 @@ async def on_message(message):
    elif message.content.lower().startswith("!easy"):
       """ !easy --subject --course_number """
 
+      bot.bot_usage("Easy")
       args = message.content.lower().split("--")
       if len(args) == 3:
          subj = args[1].strip()
@@ -209,6 +213,7 @@ async def on_message(message):
          !find --term --subject --course_number
          !find --term --crn
       """
+      bot.bot_usage("Find")
       args = message.content.lower().split("--")
       if len(args) == 3:
          term = term_parser(args[1].strip())
@@ -218,7 +223,7 @@ async def on_message(message):
             response = bot.search_by_crn(term=term, crn=crn)
             if response:
                table = PrettyTable()
-               table.field_names = ["CRN", "Subject", "Course", "Rem", "WLRem", "Instructor", "Days", "Time"]
+               table.field_names = ["CRN", "Subject", "Course", "Act", "Rem", "WLRem", "Instructor", "Days", "Time", "Location"]
                for data in response:
                   table.add_row(data)
                await message.channel.send(f"```{table}```")
@@ -239,10 +244,10 @@ async def on_message(message):
             response = bot.search_by_term_subj(term=term, subj=subj)
             if response:
                table = PrettyTable()
-               table.field_names = ["CRN", "Subject", "Course", "Rem", "WLRem", "Instructor", "Days", "Time"]
+               table.field_names = ["CRN", "Subject", "Course", "Act", "Rem", "WLRem", "Instructor", "Days", "Time", "Location"]
                for index, data in enumerate(response):
                   table.add_row(data)
-                  if index % 15 == 0 and index != 0 or index == len(response) - 1:
+                  if index % 10 == 0 and index != 0 or index == len(response) - 1:
                      await message.channel.send(f"```{table}```")
                      table.clear_rows()   
             else:
@@ -275,10 +280,10 @@ async def on_message(message):
          response = bot.search_by_term_subj_crse(term=term, subj=subj, crse=crse)
          if response:
             table = PrettyTable()
-            table.field_names = ["CRN", "Subject", "Course", "Rem", "WLRem", "Instructor", "Days", "Time"]
+            table.field_names = ["CRN", "Subject", "Course", "Act", "Rem", "WLRem", "Instructor", "Days", "Time", "Location"]
             for index, data in enumerate(response):
                table.add_row(data)
-               if index % 15 == 0 and index != 0 or index == len(response) - 1:
+               if index % 10 == 0 and index != 0 or index == len(response) - 1:
                   await message.channel.send(f"```{table}```")
                   table.clear_rows()   
          else:
@@ -303,6 +308,7 @@ async def on_message(message):
          await message.channel.send(embed = embed)
 
    elif message.content.lower().startswith("!waitlist"):
+      bot.bot_usage("Waitlist")
       args = message.content.lower().split("--")
       response = []
       invalid = False
@@ -345,5 +351,9 @@ async def on_message(message):
             embed.add_field(name="Examples:", value="➡ **!waitlist --Delia --CIS --22A**", inline=True)
             embed.set_footer(text="Thank you for using me 😀")
             await message.channel.send(embed = embed)
+   
+   elif message.content.lower().startswith("!apicalls"):
+      response = bot.bot_usage_viewer()[0][0]
+      await message.channel.send(f"```Total Number of Times I have been called: {response}```")
 
 client.run(DISCORD_TOKEN)

@@ -16,6 +16,25 @@ class Digger:
       self.conn = sqlite3.connect(self.database_filepath)
       self.cur = self.conn.cursor()
 
+   def bot_usage(self, name):
+      """ 
+      This function will add the number of times each command is used
+
+      """
+      self.cur.execute('''
+         UPDATE bot_usage SET counter = counter + 1 WHERE Command = ?;
+         ''', (name,))
+      self.conn.commit()
+   
+   def bot_usage_viewer(self):
+      """ 
+      This function will return raw bot usage data
+
+      """
+      self.cur.execute('''
+         SELECT SUM(Counter) FROM bot_usage;
+         ''')
+      return self.cur.fetchall()
 
    def waitlist_viewer_crse(self, instructor, subj, crse):
       """ 
@@ -67,8 +86,8 @@ class Digger:
 
       """
       self.cur.execute('''
-         SELECT Crn, deanza_course_schedule.Subj, deanza_course_schedule.Crse, Rem, Wlrem,
-         Instructor, Days, Time
+         SELECT Crn, deanza_course_schedule.Subj, deanza_course_schedule.Crse, Act, Rem, Wlrem,
+         Instructor, Days, Time, Location
          FROM deanza_course_schedule
          LEFT JOIN deanza_course_details
          ON deanza_course_schedule.Subj = deanza_course_details.Subj AND deanza_course_schedule.Crse = deanza_course_details.Crse
@@ -89,8 +108,8 @@ class Digger:
 
       """
       self.cur.execute('''
-         SELECT Crn, deanza_course_schedule.Subj, deanza_course_schedule.Crse, Rem, Wlrem,
-         Instructor, Days, Time
+         SELECT Crn, deanza_course_schedule.Subj, deanza_course_schedule.Crse, Act, Rem, Wlrem,
+         Instructor, Days, Time, Location
          FROM deanza_course_schedule
          LEFT JOIN deanza_course_details
          ON deanza_course_schedule.Subj = deanza_course_details.Subj AND deanza_course_schedule.Crse = deanza_course_details.Crse
@@ -110,8 +129,8 @@ class Digger:
 
       """
       self.cur.execute('''
-         SELECT Crn, deanza_course_schedule.Subj, deanza_course_schedule.Crse, Rem, Wlrem,
-         Instructor, Days, Time
+         SELECT Crn, deanza_course_schedule.Subj, deanza_course_schedule.Crse, Act, Rem, Wlrem,
+         Instructor, Days, Time, Location
          FROM deanza_course_schedule
          LEFT JOIN deanza_course_details
          ON deanza_course_schedule.Subj = deanza_course_details.Subj AND deanza_course_schedule.Crse = deanza_course_details.Crse
@@ -246,4 +265,3 @@ class Digger:
       else:
          return []
       return self.cur.fetchall()
-      
