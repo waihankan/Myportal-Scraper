@@ -1,4 +1,1 @@
-- add phone number
-- fixed data inconsistency transfer_camp
-- fix commands, and add useful commands
-
+scrape foothill
