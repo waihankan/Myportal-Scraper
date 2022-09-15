@@ -2,4 +2,5 @@
 - make a documentation + marketing
 - volunteer forms
 - google cloud server
-
+- latest updated data
+- change (--) to (-) because discord mobile version does not work well
