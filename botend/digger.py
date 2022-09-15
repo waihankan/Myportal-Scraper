@@ -5,6 +5,7 @@
 
 import sqlite3
 from multipledispatch import dispatch
+from datetime import datetime
 
 
 class Digger:
@@ -33,6 +34,16 @@ class Digger:
       """
       self.cur.execute('''
          SELECT SUM(Counter) FROM bot_usage;
+         ''')
+      return self.cur.fetchall()
+
+   def get_updated_time(self):
+      """ 
+      This function will return the time when the database was last updated
+
+      """
+      self.cur.execute('''
+         SELECT Updated_time FROM submission_time;
          ''')
       return self.cur.fetchall()
 
@@ -75,7 +86,6 @@ class Digger:
       (f"%{instructor.split()[0]}%", subj.upper(), LINES))
       return self.cur.fetchall()
 
-
    def search_by_term_subj(self, term, subj):
       """ 
       This function will return raw schedule data for a specific term and subject
@@ -95,7 +105,6 @@ class Digger:
          ''', 
       (term, subj.upper()))
       return self.cur.fetchall()
-
 
    def search_by_term_subj_crse(self, term, subj, crse):
       """ 
@@ -185,7 +194,6 @@ class Digger:
             return f"D{crse}."
          elif(len(crse) == 4):
             return f"D{crse}"
-            
 
    @dispatch(str)
    def prof_grade_info(self, instructor):
@@ -207,7 +215,6 @@ class Digger:
       (f"%{instructor.split()[0]}%", LINES))
       return self.cur.fetchall()
 
-
    @dispatch(str, str)
    def prof_grade_info(self, subj, crse):
       LINES = 10
@@ -219,7 +226,6 @@ class Digger:
          ''',
       (subj.upper(), crse.upper(), LINES))
       return self.cur.fetchall()
-
 
    @dispatch(str, str, str)
    def prof_grade_info(self, instructor, subj, crse):
@@ -240,7 +246,6 @@ class Digger:
          ''', 
       (f"%{instructor.split()[0]}%", subj.upper(), crse.upper(), LINES))
       return self.cur.fetchall()
-
 
    def who_is(self, instructor):
       """

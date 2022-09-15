@@ -9,6 +9,7 @@ import requests
 import time
 import pandas as pd
 import sqlite3 as sql
+from datetime import datetime
 
 # Change Database filepath here
 HTML_FILEPATH = "./database/html_archive/"
@@ -30,6 +31,20 @@ def insert_schedule(term, crn, status, subj, crse, sec, _cmp, coreq, act, rem, w
    )
    conn.commit()
    conn.close()
+
+def insert_updated_time():
+   """ 
+   This function will update the time when the database was last updated
+
+   """
+   conn = sql.connect(DATABASE_FILEPATH)
+   cur = conn.cursor()
+   time = datetime.now().strftime("%B %d, %Y %I:%M%p")
+   cur.execute('''
+      UPDATE submission_time SET Updated_time = ?;
+      ''', (time,))
+   conn.commit()
+
 
 class FetchDataRequests():
    def __init__(self, sleeptime=10):
@@ -99,6 +114,8 @@ class FetchDataRequests():
          self.archive_one_term(term)
          time.sleep(self.sleeptime)
 
+
+
    def update_current_term(self, term):
          response = self._fetch_data(term)
          print("fetched data")
@@ -112,4 +129,5 @@ class FetchDataRequests():
          print("updating data")
          for row in df.itertuples():
             insert_schedule(getattr(row, "Terms"), getattr(row, "Crn"), getattr(row, "Status"), getattr(row, "Subj"), getattr(row, "Crse"), getattr(row, "Sec"), getattr(row, "Cmp"), getattr(row, "Coreq"), getattr(row, "Act"), getattr(row, "Rem"), getattr(row, "Wlrem"), getattr(row, "Instructor"), getattr(row, "Date"), getattr(row, "Days"), getattr(row, "Time"), getattr(row, "Location"))
+         insert_updated_time()
             
