@@ -10,6 +10,8 @@ import time
 import pandas as pd
 import sqlite3 as sql
 from datetime import datetime
+from pytz import timezone
+
 
 # Change Database filepath here
 HTML_FILEPATH = "./database/html_archive/"
@@ -39,7 +41,8 @@ def insert_updated_time():
    """
    conn = sql.connect(DATABASE_FILEPATH)
    cur = conn.cursor()
-   time = datetime.now().strftime("%B %d, %Y %I:%M%p")
+   time = datetime.now(timezone('US/Pacific')).strftime("%B %d, %Y %I:%M%p")
+
    cur.execute('''
       UPDATE submission_time SET Updated_time = ?;
       ''', (time,))

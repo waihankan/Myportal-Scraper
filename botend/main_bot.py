@@ -226,7 +226,7 @@ async def on_message(message):
                table.field_names = ["CRN", "Subject", "Course", "Act", "Rem", "WLRem", "Instructor", "Days", "Time", "Location"]
                for data in response:
                   table.add_row(data)
-               await message.channel.send(f"```{table}\nLatest Data Update: {bot.get_updated_time()[0][0]}```")
+               await message.channel.send(f"```{table}```\n```Latest Data Update: {bot.get_updated_time()[0][0]}```")
             else:
                embed = discord.Embed(
                   title = f"No Results Found",
@@ -250,7 +250,7 @@ async def on_message(message):
                   if index % 10 == 0 and index != 0 or index == len(response) - 1:
                      await message.channel.send(f"```{table}```")
                      table.clear_rows()   
-               await message.channel.send(f"Latest Data Update: {bot.get_updated_time()[0][0]}```")
+               await message.channel.send(f"```Latest Data Update: {bot.get_updated_time()[0][0]}```")
             else:
                embed = discord.Embed(
                   title = f"No Results Found",
@@ -286,7 +286,7 @@ async def on_message(message):
                if index % 10 == 0 and index != 0 or index == len(response) - 1:
                   await message.channel.send(f"```{table}```")
                   table.clear_rows()   
-            await message.channel.send(f"Latest Data Update: {bot.get_updated_time()[0][0]}```")
+            await message.channel.send(f"```Latest Data Update: {bot.get_updated_time()[0][0]}```")
          else:
             embed = discord.Embed(
                title = f"No Results Found",
@@ -355,5 +355,9 @@ async def on_message(message):
    elif message.content.lower().startswith("!apicalls"):
       response = bot.bot_usage_viewer()[0][0]
       await message.channel.send(f"```Total Number of Times I have been called: {response}```")
+   
+   elif message.content.lower().startswith("!latest"):
+      response = bot.get_updated_time()[0][0]
+      await message.channel.send(f"```Latest Data Update Time : {response}```")
 
 client.run(DISCORD_TOKEN)
